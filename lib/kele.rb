@@ -2,12 +2,13 @@ require 'httparty'
 
 class Kele
 
-  attr_reader :user_token
+  attr_reader :auth_token
 
   include HTTParty
-  base_uri 'https://www.bloc.io/api/v1'
 
-  def initialize(email,password)
+  def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
+
+    self.class.base_uri base_url
 
     options = {
       body: {
@@ -16,7 +17,8 @@ class Kele
       }
     }
 
-    @user_token = self.class.post('/sessions', options).first.last
+    response = self.class.post('/sessions', options)
+    @auth_token = response["auth_token"]
 
   end
 
