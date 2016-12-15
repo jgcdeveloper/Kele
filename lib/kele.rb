@@ -2,7 +2,7 @@ require 'httparty'
 
 class Kele
 
-  attr_reader :auth_token
+  attr_reader :response, :auth_token
 
   include HTTParty
 
@@ -17,8 +17,9 @@ class Kele
       }
     }
 
-    response = self.class.post('/sessions', options)
-    @auth_token = response["auth_token"]
+    post = self.class.post('/sessions', options)
+    @response = post.code
+    @auth_token = post["auth_token"]
 
   end
 
