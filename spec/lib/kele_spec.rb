@@ -1,7 +1,7 @@
 RSpec.describe Kele do
 
   let(:kele_unauthorized) { Kele.new("antblessing@gmail.com","password",'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
-  let(:kele_authorized) { Kele.new("jgcdeveloper@gmail.com","waip@7200",'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
+  let(:kele_authorized) { Kele.new(ENV["BLOC_EMAIL"],ENV["BLOC_PASSWORD"],'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
 
   describe "HTTP Response Codes" do
 
