@@ -30,19 +30,17 @@ class Kele
 
   def get_me
 
-    raise Kele::UnauthorizedUserError.new("You do not have a valid authentication token") if @auth_token == nil
+  raise Kele::InvalidAuthTokenError if @auth_token == nil
 
-    puts "Setting user data into @current_user"
+  #Using our authorization token to retrieve the current user
+  response = self.class.get('/users/me', headers: { "authorization" => @auth_token })
 
-    #Using our authorization token to retrieve the current user
-    response = self.class.get('/users/me', headers: { "authorization" => @auth_token })
-
-    #Taking the API response and converting the body to a ruby hash
-    @current_user = JSON.parse(response.body)
+  #Taking the API response and converting the body to a ruby hash
+  @current_user = JSON.parse(response.body)
 
   end
 
 end
 
-class Kele::UnauthorizedUserError < StandardError;
+class Kele::InvalidAuthTokenError < StandardError;
 end

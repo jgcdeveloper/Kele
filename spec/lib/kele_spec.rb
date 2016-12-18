@@ -31,14 +31,18 @@ RSpec.describe Kele do
 
   end
 
-  describe "Calling get_me without a valid auth_token" do
+  describe "Exceptions" do
 
-    before(:example) do
-      kele_unauthorized.get_me
+    it "can raise an invalid token exception" do
+      expect { raise Kele::InvalidAuthTokenError }.to raise_exception(Kele::InvalidAuthTokenError)
     end
 
-    it "Will not write data to @current_user without a authorization token" do
-      expect(kele_unauthorized.current_user).to be_nil
+  end
+
+  describe "Calling get_me without a valid auth_token" do
+
+    it "Will raise an exception" do
+      expect { kele_unauthorized.get_me }.to raise_exception(Kele::InvalidAuthTokenError)
     end
 
   end
