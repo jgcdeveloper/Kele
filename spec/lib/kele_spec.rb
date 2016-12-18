@@ -3,7 +3,7 @@ RSpec.describe Kele do
   let(:kele_authorized) { Kele.new( ENV['BLOC_EMAIL'], ENV['BLOC_PASSWORD'],'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
   let(:kele_unauthorized) { Kele.new("antblessing@gmail.com","password",'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
 
-  describe "Testing HTTP Response Codes" do
+  describe "HTTP Responses" do
 
     it "Returns 200 for an accepted connection with accepted credentials" do
       expect(kele_authorized.http_response).to eq(200)
@@ -15,7 +15,7 @@ RSpec.describe Kele do
 
   end
 
-  describe "Testing attributes" do
+  describe "Attributes" do
 
     it "Has an http_response, auth_token and current_user attributes" do
       expect(kele_authorized).to have_attributes(auth_token: kele_authorized.auth_token, http_response: kele_authorized.http_response, current_user: kele_authorized.current_user)
@@ -31,7 +31,7 @@ RSpec.describe Kele do
 
   end
 
-  describe "Test calling get_me without a valid topic" do
+  describe "Calling get_me without a valid auth_token" do
 
     before(:example) do
       kele_unauthorized.get_me
@@ -43,7 +43,7 @@ RSpec.describe Kele do
 
   end
 
-  describe "Testing the get_me method with a valid token" do
+  describe "Calling get_me with a valid auth_token" do
 
     before(:example) do
       kele_authorized.get_me
