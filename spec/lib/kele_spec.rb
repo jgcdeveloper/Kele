@@ -17,9 +17,19 @@ RSpec.describe Kele do
 
   describe "Attributes" do
 
-    it "Has an http_response, auth_token and current_user attributes" do
-      expect(kele_authorized).to have_attributes(auth_token: kele_authorized.auth_token, http_response: kele_authorized.http_response, current_user: kele_authorized.current_user)
+    it "Has an the required attributes" do
+      expect(kele_authorized).to have_attributes(
+        auth_token: kele_authorized.auth_token,
+        http_response: kele_authorized.http_response,
+        current_user: kele_authorized.current_user,
+        current_user_mentor_id: kele_authorized.current_user_mentor_id,
+        current_user_mentor_availability: kele_authorized.current_user_mentor_availability
+      )
     end
+
+  end
+
+  describe "authentication tokens" do
 
     it "Provides an auth_token for an authorized user" do
       expect(kele_authorized.auth_token).to_not be_nil
@@ -37,6 +47,10 @@ RSpec.describe Kele do
       expect { raise Kele::InvalidAuthTokenError }.to raise_exception(Kele::InvalidAuthTokenError)
     end
 
+    it "can raise an invalid mentor id exception" do
+      expect { raise Kele::InvalidMentorID }.to raise_exception(Kele::InvalidMentorID)
+    end
+
   end
 
   describe "Calling get_me without a valid auth_token" do
@@ -46,6 +60,7 @@ RSpec.describe Kele do
     end
 
   end
+
 
   describe "Calling get_me with a valid auth_token" do
 
@@ -65,6 +80,36 @@ RSpec.describe Kele do
 
     it "Does not find an invalid hash key" do
       expect(kele_authorized.current_user["invalid"]).to be_nil
+    end
+
+    it "Calls a method for setting attributes" do
+      expect(kele_authorized).to receive(:set_my_attributes)
+      kele_authorized.get_me
+    end
+
+    it "Returns nil" do
+      expect(kele_authorized.get_me).to eq(nil)
+    end
+
+  end
+
+  describe "Calling get_mentor_availability without a defined mentor ID" do
+
+    it "Will raise an exception" do
+      expect { kele_unauthorized.get_mentor_availability }.to raise_exception(Kele::InvalidMentorID)
+    end
+
+  end
+
+  describe "Calling get_mentor_availability with a valid mentor ID" do
+
+    before(:example) do
+      kele_authorized.get_me
+      kele_authorized.get_mentor_availability
+    end
+
+    it "Will set data to @current_user_mentor_availability with an authorization token" do
+      expect(kele_authorized.current_user_mentor_availability).to_not be_nil
     end
 
   end
