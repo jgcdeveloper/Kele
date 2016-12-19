@@ -2,12 +2,14 @@ PATH
   remote: .
   specs:
     kele (0.0.1)
+      dotenv (~> 2.1)
       httparty (~> 0.14)
 
 GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.2.5)
+    dotenv (2.1.1)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     multi_xml (0.6.0)

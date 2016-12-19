@@ -1,10 +1,12 @@
 require 'bundler/setup'
 Bundler.setup
 
-#Required GEM
+require 'dotenv'
+Dotenv.load!('dev_variables.env')
+
 require 'kele'
+
 require 'httparty'
 
 RSpec.configure do |config|
-  # some (optional) config here
 end

@@ -6,3 +6,4 @@
 
 # Ignore local gem installation file
 /*.gem
+/dev_variables.env

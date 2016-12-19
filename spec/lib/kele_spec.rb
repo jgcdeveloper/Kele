@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 RSpec.describe Kele do
 
   let(:kele_authorized) { Kele.new( ENV['BLOC_EMAIL'], ENV['BLOC_PASSWORD'],'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')}
