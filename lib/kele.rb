@@ -1,12 +1,16 @@
 require 'httparty'
 require 'json'
+require 'roadmap'
 
 class Kele
 
   attr_reader :http_response, :auth_token, :current_user,
               :current_user_mentor_id, :current_user_mentor_availability
 
+  attr_accessor :roadmap, :checkpoint
+
   include HTTParty
+  include Roadmap
 
   #This method will execute when the class is instansiated
   def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
