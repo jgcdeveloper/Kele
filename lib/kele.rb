@@ -4,7 +4,7 @@ require 'roadmap'
 
 class Kele
 
-  attr_reader :http_response, :auth_token, :current_user,
+  attr_reader :auth_token, :current_user,
               :current_user_mentor_id, :current_user_mentor_availability
 
   attr_accessor :roadmap, :checkpoint
@@ -14,7 +14,6 @@ class Kele
 
   #This method will execute when the class is instansiated
   def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
-
     self.class.base_uri base_url
 
     options = {
@@ -24,19 +23,16 @@ class Kele
       }
     }
 
-    post = self.class.post('/sessions', options)
-    @http_response = post.code
-    @auth_token = post["auth_token"]
+    response = self.class.post('/sessions', options)
+    raise Kele::InvalidCredentials if response.code != 200
 
+    @auth_token = response["auth_token"]
   end
 
   #This method will retrieve the user information from the API, strip the headers,
   #and convert into a ruby hash form. It will then store that into @current_user
 
   def get_me
-
-    raise Kele::InvalidAuthTokenError if @auth_token == nil
-
     #Using our authorization token to retrieve the current user
     response = self.class.get('/users/me', headers: { "authorization" => @auth_token })
 
@@ -48,17 +44,14 @@ class Kele
 
     #I use return here so that I return nil instead of the last evaluated statement in the last method of set_my_attributes
     return
-
   end
 
 
   def get_mentor_availability(mentor_id = @current_user_mentor_id)
-
-    raise Kele::InvalidMentorID if mentor_id == nil
-
     response = self.class.get("/mentors/#{mentor_id}/student_availability", headers: {"authorization" => @auth_token })
-    @current_user_mentor_availability = JSON.parse(response.body)
+    raise Kele::InvalidMentorID if response.code != 200
 
+    @current_user_mentor_availability = JSON.parse(response.body)
   end
 
   private
@@ -73,8 +66,7 @@ class Kele
     @current_user_mentor_id = current_user["current_enrollment"]["mentor_id"]
   end
 
-
 end
 
-class Kele::InvalidAuthTokenError < StandardError; end
+class Kele::InvalidCredentials < StandardError; end
 class Kele::InvalidMentorID < StandardError; end
