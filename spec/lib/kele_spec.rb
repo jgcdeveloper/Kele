@@ -71,8 +71,8 @@ RSpec.describe Kele do
       kele_authorized.get_me
     end
 
-    it "Returns nil" do
-      expect(kele_authorized.get_me).to eq(nil)
+    it "Returns the #current_user" do
+      expect(kele_authorized.get_me).to eq(kele_authorized.current_user)
     end
 
   end

@@ -43,7 +43,7 @@ class Kele
     set_my_attributes
 
     #I use return here so that I return nil instead of the last evaluated statement in the last method of set_my_attributes
-    return
+    return @current_user
   end
 
 
@@ -64,6 +64,10 @@ class Kele
   #called by set_my_attributes, this will set the current_user_mentor_id attribute
   def get_my_mentor_id
     @current_user_mentor_id = current_user["current_enrollment"]["mentor_id"]
+  end
+
+  def response_parse(to_parse)
+    JSON.parse(to_parse)
   end
 
 end
