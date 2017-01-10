@@ -16,7 +16,7 @@ class Kele
 
 
   #This method will execute when the class is instansiated
-  def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
+  def initialize(email,password, base_url = 'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')
     self.class.base_uri base_url
 
     options = {

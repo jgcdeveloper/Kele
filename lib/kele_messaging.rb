@@ -20,6 +20,32 @@ module Messaging
     response["count"]
   end
 
+  def create_message(token = nil, recipient_id = @current_user_mentor_id)
+
+    raise (Messaging::NoUserDefined).new if @current_user == nil
+
+    display_create_message_header(@current_user["email"], recipient_id, token)
+
+    message_subject = set_message_subject
+    message_body = set_message_body
+
+    options = {
+      body: {
+        "sender": current_user["email"],
+        "recipient_id": recipient_id,
+        "subject": message_subject,
+        "stripped-text": message_body
+      },
+
+      headers: {
+        :authorization => auth_token
+      }
+    }
+
+    self.class.post("/messages", options )
+
+  end
+
   private
 
   def retrieve_messages_from_server(page)
@@ -60,6 +86,36 @@ module Messaging
 
   end
 
+  def display_create_message_header(user, recipient, token)
+
+    print "Sending Message From: "
+    puts user
+
+    print "Recipient ID "
+    print "(User Mentor)" if (recipient == @current_user_mentor_id)
+    print ": "
+    puts recipient
+
+    if token == nil
+      puts "Creating new message!"
+    else
+      print "Creating message on token thread: "
+      puts token
+    end
+
+  end
+
+  def set_message_subject
+    print "Enter Subject: "
+    gets
+  end
+
+  def set_message_body
+    print "Enter Body: "
+    gets
+  end
+
 end
 
 class Messaging::InvalidPageNumber < StandardError; end
+class Messaging::NoUserDefined < StandardError; end
