@@ -14,7 +14,8 @@ module Messaging
 
   end
 
-  #Leaving this as a public method as it could be useful later on for user to see total message number
+  #Leaving this as a public method as it could be useful later on for user to see total message number.
+  #Set to retrieve first page to reduce data usage.
   def retrieve_message_count_from_server
     response = retrieve_messages_from_server(1)
     response["count"]
@@ -22,11 +23,13 @@ module Messaging
 
   def create_message(token = nil, recipient_id = @current_user_mentor_id)
 
-    raise (Messaging::NoUserDefined).new if @current_user == nil
+    raise (Messaging::NoUserDefined).new if @current_user.nil?
 
     display_create_message_header(@current_user["email"], recipient_id, token)
 
-    message_subject = set_message_subject
+    #only require a new subject if token is undefined
+    (message_subject = set_message_subject) if token == nil
+
     message_body = set_message_body
 
     options = {
@@ -41,6 +44,8 @@ module Messaging
         :authorization => auth_token
       }
     }
+
+    (options[:body][:token] = token) if token != nil
 
     self.class.post("/messages", options )
 
@@ -106,16 +111,24 @@ module Messaging
   end
 
   def set_message_subject
-    print "Enter Subject: "
-    gets
+    print "Enter Message Subject (Max Length: 128): "
+    message_subject = gets.chomp
+    raise (Messaging::BlankMessageSubject).new if message_subject == ""
+    raise (Messaging::SubjectTooLong).new if message_subject.length >= 128
+    message_subject
   end
 
   def set_message_body
-    print "Enter Body: "
-    gets
+    print "Enter Message: "
+    message_body = gets.chomp
+    raise (Messaging::BlankMessageBody).new if message_body == ""
+    message_body
   end
 
 end
 
 class Messaging::InvalidPageNumber < StandardError; end
 class Messaging::NoUserDefined < StandardError; end
+class Messaging::BlankMessageSubject < StandardError; end
+class Messaging::SubjectTooLong < StandardError; end
+class Messaging::BlankMessageBody < StandardError; end
