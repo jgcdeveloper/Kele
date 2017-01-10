@@ -1,6 +1,7 @@
 require 'httparty'
 require 'json'
-require 'roadmap'
+require 'kele_roadmap'
+require 'kele_messaging'
 
 class Kele
 
@@ -11,6 +12,8 @@ class Kele
 
   include HTTParty
   include Roadmap
+  include Messaging
+
 
   #This method will execute when the class is instansiated
   def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
@@ -27,6 +30,8 @@ class Kele
     raise Kele::InvalidCredentials if response.code != 200
 
     @auth_token = response["auth_token"]
+
+
   end
 
   #This method will retrieve the user information from the API, strip the headers,
@@ -64,10 +69,6 @@ class Kele
   #called by set_my_attributes, this will set the current_user_mentor_id attribute
   def get_my_mentor_id
     @current_user_mentor_id = current_user["current_enrollment"]["mentor_id"]
-  end
-
-  def response_parse(to_parse)
-    JSON.parse(to_parse)
   end
 
 end
