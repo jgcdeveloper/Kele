@@ -23,7 +23,7 @@ module Messaging
 
   def create_message(token = nil, recipient_id = @current_user_mentor_id)
 
-    raise (Messaging::NoUserDefined).new if @current_user.nil?
+    raise (Kele::NoUserDefined).new if @current_user.nil?
 
     display_create_message_header(@current_user["email"], recipient_id, token)
 
@@ -128,7 +128,6 @@ module Messaging
 end
 
 class Messaging::InvalidPageNumber < StandardError; end
-class Messaging::NoUserDefined < StandardError; end
 class Messaging::BlankMessageSubject < StandardError; end
-class Messaging::SubjectTooLong < StandardError; end
 class Messaging::BlankMessageBody < StandardError; end
+class Messaging::SubjectTooLong < StandardError; end

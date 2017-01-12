@@ -2,21 +2,25 @@ require 'httparty'
 require 'json'
 require 'kele_roadmap'
 require 'kele_messaging'
+require 'kele_checkpoints'
 
 class Kele
 
   attr_reader :auth_token, :current_user,
-              :current_user_mentor_id, :current_user_mentor_availability
+              :current_user_mentor_id, :current_user_mentor_availability,
+              :current_user_enrollment_id
+
 
   attr_accessor :roadmap, :checkpoint
 
   include HTTParty
   include Roadmap
   include Messaging
+  include Checkpoints
 
 
   #This method will execute when the class is instansiated
-  def initialize(email,password, base_url = 'https://private-anon-840be6fd6b-blocapi.apiary-proxy.com/api/v1')
+  def initialize(email,password, base_url = 'https://www.bloc.io/api/v1')
     self.class.base_uri base_url
 
     options = {
@@ -64,6 +68,7 @@ class Kele
   #set_my_attributs is a private call to list other methods for setting current_user attributes
   def set_my_attributes
     get_my_mentor_id
+    get_my_enrollment_id
   end
 
   #called by set_my_attributes, this will set the current_user_mentor_id attribute
@@ -71,7 +76,13 @@ class Kele
     @current_user_mentor_id = current_user["current_enrollment"]["mentor_id"]
   end
 
+  def get_my_enrollment_id
+    puts "Testing Enrollment ID Call"
+    @current_user_enrollment_id = current_user["current_enrollment"]["id"]
+  end
+
 end
 
 class Kele::InvalidCredentials < StandardError; end
 class Kele::InvalidMentorID < StandardError; end
+class Kele::NoUserDefined < StandardError; end

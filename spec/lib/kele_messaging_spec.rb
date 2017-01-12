@@ -40,7 +40,7 @@ RSpec.describe Messaging do
     it "raises an exception error if current user has not been set" do
       expect { kele.create_message }.to raise_exception(Messaging::NoUserDefined)
     end
-
+    
   end
 
 #  describe "calling create message with user defined" do
